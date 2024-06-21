@@ -22,7 +22,7 @@ protected_app = Starlette(routes=protected_routes, middleware=middleware)
 app = Starlette(
     routes = [
         *public_routes,
-        Mount("/", app=protected_app),
+        Mount("/test", app=protected_app),
     ]
 )
 
