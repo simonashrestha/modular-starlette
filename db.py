@@ -17,11 +17,9 @@ users = Table(
 blog= Table(
     "blog",
     metadata,
+    Column("id", Integer, primary_key=True),
     Column("blog_description", Text),
     Column("self_description", String(50)),
-    Column("hashed_password", String(255)),
-    Column("email", String(50)),
-    Column("gender", String(50)),
 )
 engine = create_engine(DATABASE_URL)
 metadata.create_all(engine)
