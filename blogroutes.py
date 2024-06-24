@@ -1,10 +1,11 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from starlette.endpoints import HTTPEndpoint
 from db import database, blog
 from sqlalchemy import select, update, delete
 
-class BlogRoutes:
-    async def create_blog(self, request: Request):
+class BlogEndpoint(HTTPEndpoint):
+    async def post(self, request: Request):
         data = await request.json()
         blog_description = data.get("blog_description")
         self_description = data.get("self_description")
@@ -12,11 +13,11 @@ class BlogRoutes:
         await database.execute(query)
         return JSONResponse({"message": "Blog created successfully"}, status_code=201)
 
-    async def get_blog(self, request: Request):
+    async def get(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
-        query = select([blog]).where(blog.c.blog_id == blog_id)
+        query = select(blog).where(blog.c.blog_id == blog_id)
         fetched_blog = await database.fetch_one(query)
         if not fetched_blog:
             return JSONResponse({"error": "Blog not found"}, status_code=404)
@@ -27,7 +28,7 @@ class BlogRoutes:
         }
         return JSONResponse(blog_data)
 
-    async def update_blog(self, request: Request):
+    async def put(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
@@ -41,7 +42,7 @@ class BlogRoutes:
         await database.execute(query)
         return JSONResponse({"message": f"Blog with ID {blog_id} updated successfully"})
 
-    async def delete_blog(self, request: Request):
+    async def delete(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
@@ -49,5 +50,3 @@ class BlogRoutes:
         await database.execute(query)
         return JSONResponse({"message": f"Blog with ID {blog_id} deleted successfully"})
 
-# Create an instance of BlogRoutes
-blog_routes = BlogRoutes()
