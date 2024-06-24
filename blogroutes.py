@@ -14,7 +14,7 @@ async def get_blog(request: Request):
     blog_id = request.path_params.get("blog_id")
     if not blog_id:
         return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
-    query = blog.select().where(blog.c.ROWID == blog_id)
+    query = blog.select().where(blog.c.blog_id == blog_id)
     fetched_blog = await database.fetch_one(query)
     if not fetched_blog:
         return JSONResponse({"error": "Blog not found"}, status_code=404)
@@ -32,7 +32,7 @@ async def update_blog(request: Request):
     data = await request.json()
     blog_description = data.get("blog_description")
     self_description = data.get("self_description")
-    query = blog.update().where(blog.c.id == blog_id).values(
+    query = blog.update().where(blog.c.blog_id == blog_id).values(
         blog_description=blog_description,
         self_description=self_description
     )
@@ -43,6 +43,6 @@ async def delete_blog(request: Request):
     blog_id = request.path_params.get("blog_id")
     if not blog_id:
         return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
-    query = blog.delete().where(blog.c.id == blog_id)
+    query = blog.delete().where(blog.c.blog_id == blog_id)
     await database.execute(query)
     return JSONResponse({"message": f"Blog with ID {blog_id} deleted successfully"})
