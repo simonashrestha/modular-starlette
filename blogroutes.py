@@ -14,7 +14,7 @@ async def get_blog(request: Request):
     blog_id = request.path_params.get("blog_id")
     if not blog_id:
         return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
-    query = blog.select().where(blog.c.id == blog_id)
+    query = blog.select().where(blog.c.ROWID == blog_id)
     fetched_blog = await database.fetch_one(query)
     if not fetched_blog:
         return JSONResponse({"error": "Blog not found"}, status_code=404)

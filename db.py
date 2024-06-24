@@ -17,7 +17,7 @@ users = Table(
 blog= Table(
     "blog",
     metadata,
-    Column("id", Integer, primary_key=True),
+    Column("blog_id", Integer, primary_key=True),
     Column("blog_description", Text),
     Column("self_description", String(50)),
 )

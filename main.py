@@ -9,16 +9,23 @@ from blogroutes import create_blog, get_blog, update_blog, delete_blog
 public_routes = [
     Route("/register", register, methods=["POST"]),
     Route("/login", login, methods=["POST"]),
+    # Route("/{username}", get_user, methods=["GET"]),
+    # Route("/{username}", update_user, methods=["PUT"]),
+    # Route("/{username}", delete_user, methods=["DELETE"]),
+    # Route("/blog", create_blog, methods=["POST"]),
+    # Route("/blog/{blog_id}", get_blog, methods=["GET"]),
+    # Route("/blog/{blog_id}", update_blog, methods=["PUT"]),
+    # Route("/blog/{blog_id}", delete_blog, methods=["DELETE"]),
+]
+protected_routes = [
+    Route("/protected", protected_route, methods=["GET"]),
     Route("/{username}", get_user, methods=["GET"]),
     Route("/{username}", update_user, methods=["PUT"]),
     Route("/{username}", delete_user, methods=["DELETE"]),
     Route("/blog", create_blog, methods=["POST"]),
     Route("/blog/{blog_id}", get_blog, methods=["GET"]),
     Route("/blog/{blog_id}", update_blog, methods=["PUT"]),
-    Route("/blog/{blog_id}", delete_blog, methods=["DELETE"]),
-]
-protected_routes = [
-    Route("/protected", protected_route, methods=["GET"]),
+    Route("/blog/{blog_id}", delete_blog, methods=["DELETE"])
 ]
 middleware = [
     Middleware(JWTAuthenticationMiddleware)
@@ -29,7 +36,7 @@ protected_app = Starlette(routes=protected_routes, middleware=middleware)
 app = Starlette(
     routes = [
         *public_routes,
-        Mount("/test", app=protected_app),
+        Mount("/", app=protected_app),
     ]
 )
 
