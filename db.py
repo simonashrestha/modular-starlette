@@ -28,10 +28,17 @@ comments = Table(
     "comments",
     metadata,
     Column("comment_id", Integer, primary_key=True),
-    Column("blog_id", Integer, ForeignKey("blog.blog_id")),
+    Column("blog_id", Integer, ForeignKey("blog.blog_id", ondelete="CASCADE")),
     Column("comment_text", Text),
     Column("timestamp", String(50), default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 )
 
 engine = create_engine(DATABASE_URL)
 metadata.create_all(engine)
+
+from sqlalchemy import event
+
+def enable_foreign_keys(dbapi_connection, connection_record):
+    cursor= dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
