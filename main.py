@@ -4,7 +4,7 @@ from starlette.middleware import Middleware
 from db import database
 from middleware import JWTAuthenticationMiddleware
 from userroutes import register, login, protected_route, get_user, update_user, delete_user
-from blogroutes import BlogEndpoint
+from blogroutes import BlogEndpoint,CommentEndpoint
 
 public_routes = [
     Route("/register", register, methods=["POST"]),
@@ -18,6 +18,9 @@ protected_routes = [
     Route("/{username}", delete_user, methods=["DELETE"]),
     Route("/blogs", BlogEndpoint, methods=["POST"]),
     Route("/blogs/{blog_id:int}", BlogEndpoint, methods=["GET", "PUT", "DELETE"]),
+    Route("/comments", CommentEndpoint, methods=["POST"]),
+    Route("/blogs/{blog_id:int}/comments", CommentEndpoint, methods=["GET"]),
+    Route("/comments/{comment_id:int}", CommentEndpoint, methods=["PUT","DELETE"]),
 ]
 
 middleware = [
