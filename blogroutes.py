@@ -54,11 +54,11 @@ class BlogEndpoint(HTTPEndpoint):
 class CommentEndpoint(HTTPEndpoint):
     async def post(self, request: Request):
         data= await request.json()
-        blog_id =data.get("blog_id")
+        blog_id = request.path_params.get("blog_id")
         comment_text= data.get("comment_text")
         if not blog_id or not comment_text:
             return JSONResponse({"error": "Blog ID and comment text are required"}, status_code= 400)
-        query = comments.insert().values(blog_id=blog_id, comment_text=comment_text, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        query = comments.insert().values(comment_text=comment_text, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         await database.execute(query)
         return JSONResponse({"message": "Comment added successfully"}, status_code=201)
 

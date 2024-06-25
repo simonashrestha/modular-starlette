@@ -18,7 +18,7 @@ protected_routes = [
     Route("/{username}", delete_user, methods=["DELETE"]),
     Route("/blogs", BlogEndpoint, methods=["POST"]),
     Route("/blogs/{blog_id:int}", BlogEndpoint, methods=["GET", "PUT", "DELETE"]),
-    Route("/comments", CommentEndpoint, methods=["POST"]),
+    Route("/comments/{blog_id:int}", CommentEndpoint, methods=["POST"]),
     Route("/blogs/{blog_id:int}/comments", CommentEndpoint, methods=["GET"]),
     Route("/comments/{comment_id:int}", CommentEndpoint, methods=["PUT","DELETE"]),
 ]
