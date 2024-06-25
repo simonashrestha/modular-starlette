@@ -66,7 +66,7 @@ class CommentEndpoint(HTTPEndpoint):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse({"error": "Blog ID path parameter is required"}, status_code=400)
-        query = select([comments]).where(comments.c.blog_id == blog_id).order_by(comments.c.timestamp.desc())
+        query = select(comments).where(comments.c.blog_id == blog_id).order_by(comments.c.timestamp.desc())
         fetched_comments = await database.fetch_all(query)
         return JSONResponse([dict(comment) for comment in fetched_comments])
     

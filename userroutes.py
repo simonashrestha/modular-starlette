@@ -9,6 +9,7 @@ async def register(request: Request):
     password = data.get("password")
     email = data.get("email")
     gender = data.get("gender")
+
     query = users.select().where(users.c.username == username)
     existing_user = await database.fetch_one(query)
     if existing_user:
