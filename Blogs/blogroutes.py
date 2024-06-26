@@ -13,31 +13,34 @@ class BlogEndpoint(HTTPEndpoint):
         query = blog.insert().values(
             blog_description=blog_description, self_description=self_description
         )
-        await database.execute(query)
-        return JSONResponse({"message": "Blog created successfully"}, status_code=201)
+        blog_id = await database.execute(query)
+        return JSONResponse(
+            {"message": "Blog created successfully", "data": {"blog_id": blog_id}},
+            status_code=201
+        )
 
     async def get(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse(
-                {"error": "Blog ID path parameter is required"}, status_code=400
+                {"message": "Blog ID path parameter is required", "data": None}, status_code=400
             )
         query = select(blog).where(blog.c.blog_id == blog_id)
         fetched_blog = await database.fetch_one(query)
         if not fetched_blog:
-            return JSONResponse({"error": "Blog not found"}, status_code=404)
+            return JSONResponse({"message": "Blog not found", "data": None}, status_code=404)
         blog_data = {
             "blog_description": fetched_blog["blog_description"],
             "self_description": fetched_blog["self_description"],
             # Add more fields as needed
         }
-        return JSONResponse(blog_data)
+        return JSONResponse({"message": "Blog is retrieved.", "data": blog_data}, status_code=200)
 
     async def put(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse(
-                {"error": "Blog ID path parameter is required"}, status_code=400
+                {"message": "Blog ID path parameter is required", "data": None}, status_code=400
             )
         data = await request.json()
         blog_description = data.get("blog_description")
@@ -50,13 +53,16 @@ class BlogEndpoint(HTTPEndpoint):
             )
         )
         await database.execute(query)
-        return JSONResponse({"message": f"Blog with ID {blog_id} updated successfully"})
+        return JSONResponse(
+            {"message": f"Blog with ID {blog_id} updated successfully", "data": {"blog_id": blog_id}},
+            status_code=200
+        )
 
     async def delete(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse(
-                {"error": "Blog ID path parameter is required"}, status_code=400
+                {"message": "Blog ID path parameter is required", "data": None}, status_code=400
             )
 
         query_delete_comments = delete(comments).where(comments.c.blog_id == blog_id)
@@ -64,6 +70,7 @@ class BlogEndpoint(HTTPEndpoint):
 
         query_delete_blog = delete(blog).where(blog.c.blog_id == blog_id)
         await database.execute(query_delete_blog)
-        return JSONResponse({"message": f"Blog with ID {blog_id} deleted successfully"})
-
-
+        return JSONResponse(
+            {"message": f"Blog with ID {blog_id} deleted successfully", "data": {"blog_id": blog_id}},
+            status_code=200
+        )

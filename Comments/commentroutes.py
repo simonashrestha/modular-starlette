@@ -12,21 +12,26 @@ class CommentEndpoint(HTTPEndpoint):
         comment_text = data.get("comment_text")
         if not blog_id or not comment_text:
             return JSONResponse(
-                {"error": "Blog ID and comment text are required"}, status_code=400
+                {"message": "Blog ID and comment text are required", "data": None},
+                status_code=400
             )
         query = comments.insert().values(
             blog_id=blog_id,
             comment_text=comment_text,
             timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
-        await database.execute(query)
-        return JSONResponse({"message": "Comment added successfully"}, status_code=201)
+        comment_id = await database.execute(query)
+        return JSONResponse(
+            {"message": "Comment added successfully", "data": {"comment_id": comment_id}},
+            status_code=201
+        )
 
     async def get(self, request: Request):
         blog_id = request.path_params.get("blog_id")
         if not blog_id:
             return JSONResponse(
-                {"error": "Blog ID path parameter is required"}, status_code=400
+                {"message": "Blog ID path parameter is required", "data": None},
+                status_code=400
             )
         query = (
             select(comments)
@@ -34,18 +39,26 @@ class CommentEndpoint(HTTPEndpoint):
             .order_by(comments.c.timestamp.desc())
         )
         fetched_comments = await database.fetch_all(query)
-        return JSONResponse([dict(comment) for comment in fetched_comments])
+        comments_data = [dict(comment) for comment in fetched_comments]
+        return JSONResponse(
+            {"message": "Comments retrieved successfully", "data": comments_data},
+            status_code=200
+        )
 
     async def put(self, request: Request):
         comment_id = request.path_params.get("comment_id")
         if not comment_id:
             return JSONResponse(
-                {"error": "Comment ID path parameter is required"}, status_code=400
+                {"message": "Comment ID path parameter is required", "data": None},
+                status_code=400
             )
         data = await request.json()
         comment_text = data.get("comment_text")
         if not comment_text:
-            return JSONResponse({"error": "Comment text is required"}, status_code=400)
+            return JSONResponse(
+                {"message": "Comment text is required", "data": None},
+                status_code=400
+            )
         query = (
             update(comments)
             .where(comments.c.comment_id == comment_id)
@@ -53,17 +66,20 @@ class CommentEndpoint(HTTPEndpoint):
         )
         await database.execute(query)
         return JSONResponse(
-            {"message": f"Comment with ID {comment_id} updated successfully"}
+            {"message": f"Comment with ID {comment_id} updated successfully", "data": {"comment_id": comment_id}},
+            status_code=200
         )
 
     async def delete(self, request: Request):
         comment_id = request.path_params.get("comment_id")
         if not comment_id:
             return JSONResponse(
-                {"error": "Comment ID path parameter is required"}, status_code=400
+                {"message": "Comment ID path parameter is required", "data": None},
+                status_code=400
             )
         query = delete(comments).where(comments.c.comment_id == comment_id)
         await database.execute(query)
         return JSONResponse(
-            {"message": f"Comment with ID {comment_id} deleted successfully"}
+            {"message": f"Comment with ID {comment_id} deleted successfully", "data": {"comment_id": comment_id}},
+            status_code=200
         )
