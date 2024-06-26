@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, 
 from databases import Database
 from datetime import datetime
 
+
 DATABASE_URL = "sqlite:///./database.db"
 database = Database(DATABASE_URL)
 metadata = MetaData()
