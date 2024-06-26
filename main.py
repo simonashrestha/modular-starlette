@@ -1,10 +1,11 @@
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 from starlette.middleware import Middleware
-from db import database
+from Database.db import database
 from middleware import JWTAuthenticationMiddleware
-from userroutes import register, login, protected_route, get_user, update_user, delete_user
-from blogroutes import BlogEndpoint,CommentEndpoint
+from Users.userroutes import register, login, protected_route, get_user, update_user, delete_user
+from Blogs.blogroutes import BlogEndpoint
+from Comments.commentroutes import CommentEndpoint
 
 public_routes = [
     Route("/register", register, methods=["POST"]),
