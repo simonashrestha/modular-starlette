@@ -2,7 +2,6 @@ from Database.db import database, comments
 from sqlalchemy import select, update, delete, insert
 from datetime import datetime
 
-# Comment Queries
 async def insert_comment(blog_id: int, comment_text: str):
     query = comments.insert().values(
         blog_id=blog_id,

@@ -1,6 +1,6 @@
 from Database.db import database, blog, comments
 from sqlalchemy import select, update, delete, insert
-# Blog Queries
+
 async def insert_blog(blog_description: str, self_description: str):
     query = blog.insert().values(
         blog_description=blog_description, self_description=self_description
