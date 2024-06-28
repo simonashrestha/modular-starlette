@@ -1,5 +1,5 @@
 from Database.db import database, blog, comments
-from sqlalchemy import select, update, delete, insert
+from sqlalchemy import func, select, update, delete, insert
 
 async def insert_blog(blog_description: str, self_description: str):
     query = blog.insert().values(
@@ -25,3 +25,22 @@ async def delete_blog_and_comments(blog_id: int):
 
     query_delete_blog = delete(blog).where(blog.c.blog_id == blog_id)
     await database.execute(query_delete_blog)
+
+# async def increment_likes(blog_id: int):
+#     query = update(blog).where(blog.c.blog_id == blog_id).values(
+#         likes=blog.c.likes + 1
+#     )
+#     return await database.execute(query)
+
+
+async def increment_likes(blog_id: int):
+    query = update(blog).where(blog.c.blog_id == blog_id).values(
+        likes=func.coalesce(blog.c.likes, 0) + 1
+    )
+    return await database.execute(query)
+
+async def increment_dislikes(blog_id: int):
+    query = update(blog).where(blog.c.blog_id == blog_id).values(
+        dislikes=blog.c.dislikes + 1
+    )
+    return await database.execute(query)

@@ -45,6 +45,8 @@ blog = Table(
     Column("blog_id", Integer, primary_key=True),
     Column("blog_description", Text),
     Column("self_description", String(50)),
+    Column("likes", Integer, default=0),
+    Column("dislikes", Integer, default=0),
 )
 
 comments = Table(
