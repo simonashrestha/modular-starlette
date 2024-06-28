@@ -10,11 +10,11 @@ async def increment_likes(blog_id: int):
     )
     return await database.execute(query)
 
-
 async def increment_dislikes(blog_id: int):
-    query = (
+    id = (
         update(blog)
         .where(blog.c.blog_id == blog_id)
         .values(dislikes=func.coalesce(blog.c.dislikes, 0) + 1)
     )
-    return await database.execute(query)
+    return await database.execute(id)
+
