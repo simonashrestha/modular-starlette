@@ -60,4 +60,13 @@ comments = Table(
     ),
 )
 
+reaction= Table(
+    "reactions",
+    metadata,
+    Column("id", Integer, primary_key= True, index= True),
+    Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE")),
+    Column("blog_id", Integer, ForeignKey("blog.blog_id", ondelete="CASCADE")),
+    Column("type", String (10)),
+)
+
 metadata.create_all(engine)
