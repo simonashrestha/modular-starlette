@@ -1,4 +1,5 @@
 from sqlalchemy import (
+    JSON,
     create_engine,
     MetaData,
     Table,
@@ -47,6 +48,8 @@ blog = Table(
     Column("self_description", String(50)),
     Column("likes", Integer, default=0),
     Column("dislikes", Integer, default=0),
+    
+    Column("reactions", JSON, default={})
 )
 
 comments = Table(
