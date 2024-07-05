@@ -1,8 +1,0 @@
-Blog project info
-1. Ram
-pw:123
-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJSYW0iLCJleHAiOjE3MTk1NzI5Mzd9.yGaZoUPieHZrRaUjwkO2Ka-x9skS7BozmfUJIRPZ51Q
-
-2. Hari
-pw: 123
-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJIYXJpIiwiZXhwIjoxNzE5NTgxMzI2fQ.Xajc4rATR_95pD9_YjianPWEju4nVEBF4zSIDSTgi0U

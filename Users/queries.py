@@ -1,5 +1,5 @@
 from Database.db import database, users
-from Auth.auth import hash_password
+from Users.Auth.auth import hash_password
 from sqlalchemy import select, update, delete, insert
 
 async def find_user_by_username(username: str):

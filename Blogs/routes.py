@@ -1,14 +1,15 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.endpoints import HTTPEndpoint
-from Blogqueries.bqueries import (
+from Blogs.queries import (
     insert_blog,
     select_blog_by_id,
     update_blog,
     delete_blog_and_comments,
 )
+from repo import AbstractRepository
 
-class BlogEndpoint(HTTPEndpoint):
+class BlogEndpoint(HTTPEndpoint, AbstractRepository):
     async def post(self, request: Request):
         data = await request.json()
 

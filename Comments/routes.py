@@ -1,9 +1,10 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.endpoints import HTTPEndpoint
-from Commentqueries.cqueries import insert_comment, select_comments_by_blog_id, update_comment, delete_comment
+from Comments.queries import insert_comment, select_comments_by_blog_id, update_comment, delete_comment
+from repo import AbstractRepository
 
-class CommentEndpoint(HTTPEndpoint):
+class CommentEndpoint(HTTPEndpoint, AbstractRepository):
     async def post(self, request: Request):
         data = await request.json()
         blog_id = request.path_params.get("blog_id")
