@@ -4,9 +4,9 @@ from starlette.middleware import Middleware
 from Blogs.Like.likeroutes import LikeEndpoint
 from Database.db import database
 from middleware import JWTAuthenticationMiddleware
-from Users.routes import UserEndpoint
-from Blogs.routes import BlogEndpoint
-from Comments.routes import CommentEndpoint
+from Users.endpoint import UserEndpoint
+from Blogs.endpoint import BlogEndpoint
+from Comments.endpoint import CommentEndpoint
 
 
 public_routes = [
