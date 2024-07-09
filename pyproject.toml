@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "poetry add asyncpg databases"
+version = "0.1.0"
+description = "A sample project to demonstrate switching from SQLite to PosttgreSQL"
+authors = ["simonashrestha <simonashrestha1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+asyncpg = "^0.29.0"
+databases = "^0.9.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -11,9 +11,11 @@ from sqlalchemy import (
 )
 from databases import Database
 from datetime import datetime
+from sqlalchemy.orm import sessionmaker
+
 
 # PostgreSQL database URL
-DATABASE_URL = "postgresql://postgre:admin123@localhost/database"
+DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/database"
 database = Database(DATABASE_URL)
 metadata = MetaData()
 
@@ -53,6 +55,9 @@ comments = Table(
 )
 
 metadata.create_all(engine)
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
 # from sqlalchemy import (
