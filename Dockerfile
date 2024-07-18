@@ -1,20 +1,19 @@
-# Use an official Python runtime as a parent image
+# Dockerfile
+
 FROM python:3.8-slim
 
-# Set the working directory in the container
+# Install PostgreSQL client libraries
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc
+
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install any needed packages specified in requirements.txt
+# Copy requirements.txt and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Copy the rest of the application code
+COPY . .
 
-# Define environment variable
-ENV NAME world
-
-# Run main.py when the container launches
-CMD ["python", "main.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
