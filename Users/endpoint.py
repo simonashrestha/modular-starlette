@@ -176,19 +176,21 @@ class UserEndpoint (HTTPEndpoint):
                 status_code=404
             )
 
+        password_regex = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"
+    
+        if new_password:
+            if not re.match(password_regex, new_password):
+                return JSONResponse(
+                {"message": "Password must be at least 8 characters long, and include uppercase letters, lowercase letters, digits, and special characters.", "data": None},
+                status_code=400
+            )
+        
         # if new_password:
-        #     if len(new_password)<8:
+        #     if len(new_password)< 8:
         #         return JSONResponse(
-        #             {"message": "Password must be at least 8 characters long", "data":None},
+        #             {"message": "Password must be at least 8 characters long", "data": None},
         #             status_code=400
         #         )
-        
-        if new_password:
-            if len(new_password)< 8:
-                return JSONResponse(
-                    {"message": "Password must be at least 8 characters long", "data": None},
-                    status_code=400
-                )
             
             # if not re.search(r"[A-Z]", new_password):
             #     return JSONResponse(
