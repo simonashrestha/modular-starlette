@@ -31,35 +31,43 @@ class UserEndpoint (HTTPEndpoint):
         email = user_data.email
         gender = user_data.gender
 
-        if len(password) <8:
-            return JSONResponse(
-                {"message": "Password must be at least 8 characters long", "data": None},
-                        status_code=400
-            )
+        password_regex = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"
         
-        if not re.search(r"[A-Z]", password):
+        if not re.match(password_regex, password):
             return JSONResponse(
-                {"message": "Password must contain at least one uppercase letter", "data": None},
+                {"message": "Password must be at least 8 characters long, and include uppercase letters, lowercase letters, digits, and special characters.", "data": None},
                 status_code=400
             )
+
+        # if len(password) <8:
+        #     return JSONResponse(
+        #         {"message": "Password must be at least 8 characters long", "data": None},
+        #                 status_code=400
+        #     )
         
-        if not re.search(r"[a-z]", password):
-            return JSONResponse(
-                {"message": "Password must contain at least one uppercase letter", "data": None},
-                status_code=400
-            )
+        # if not re.search(r"[A-Z]", password):
+        #     return JSONResponse(
+        #         {"message": "Password must contain at least one uppercase letter", "data": None},
+        #         status_code=400
+        #     )
         
-        if not re.search(r"\d", password):
-            return JSONResponse(
-                {"message": "Password must contain at least one lowercase letter", "data": None},
-                status_code=400
-            )
+        # if not re.search(r"[a-z]", password):
+        #     return JSONResponse(
+        #         {"message": "Password must contain at least one lowercase letter", "data": None},
+        #         status_code=400
+        #     )
         
-        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-            return JSONResponse(
-                {"message": "Password must contain at least one special character", "data": None},
-                status_code=400
-            )
+        # if not re.search(r"\d", password):
+        #     return JSONResponse(
+        #         {"message": "Password must contain at least one digit", "data": None},
+        #         status_code=400
+        #     )
+        
+        # if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        #     return JSONResponse(
+        #         {"message": "Password must contain at least one special character", "data": None},
+        #         status_code=400
+        #     )
         
 
         existing_user = await find_user_by_username(username)
