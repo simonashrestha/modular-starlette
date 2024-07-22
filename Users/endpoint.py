@@ -1,18 +1,66 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from starlette.types import Receive, Scope, Send
 from Users.Auth.auth import hash_password, verify_password, create_access_token
 from Users.queries import find_user_by_username, create_user, update_user_password, update_user_email, update_user_gender, delete_user_by_username
 from starlette.endpoints import HTTPEndpoint
 from repo import AbstractRepositoryforUser
 
+from pydantic import EmailStr, BaseModel, ValidationError
+import re
 
-class UserEndpoint (HTTPEndpoint, AbstractRepositoryforUser):
+class UserRegistrationRequest(BaseModel):
+    username:str
+    password:str
+    email: EmailStr
+    gender: str
+
+class UserEndpoint (HTTPEndpoint):
     async def register(request: Request):
-        data = await request.json()
-        username = data.get("username")
-        password = data.get("password")
-        email = data.get("email")
-        gender = data.get("gender")
+        try:
+            data = await request.json()
+            user_data= UserRegistrationRequest(**data)
+        except ValidationError as e:
+            return JSONResponse(
+                {"message": f"validation error: {e.errors()}", "data": None},
+                status_code=400
+            )
+
+        username = user_data.username
+        password = user_data.password
+        email = user_data.email
+        gender = user_data.gender
+
+        if len(password) <8:
+            return JSONResponse(
+                {"message": "Password must be at least 8 characters long", "data": None},
+                        status_code=400
+            )
+        
+        if not re.search(r"[A-Z]", password):
+            return JSONResponse(
+                {"message": "Password must contain at least one uppercase letter", "data": None},
+                status_code=400
+            )
+        
+        if not re.search(r"[a-z]", password):
+            return JSONResponse(
+                {"message": "Password must contain at least one uppercase letter", "data": None},
+                status_code=400
+            )
+        
+        if not re.search(r"\d", password):
+            return JSONResponse(
+                {"message": "Password must contain at least one lowercase letter", "data": None},
+                status_code=400
+            )
+        
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            return JSONResponse(
+                {"message": "Password must contain at least one special character", "data": None},
+                status_code=400
+            )
+        
 
         existing_user = await find_user_by_username(username)
         if existing_user:
@@ -27,6 +75,35 @@ class UserEndpoint (HTTPEndpoint, AbstractRepositoryforUser):
             {"message": "User created successfully", "data": {"username": username}},
             status_code=201
     )
+
+
+# class UserEndpoint (HTTPEndpoint, AbstractRepositoryforUser):
+#     async def register(request: Request):
+#         data = await request.json()
+#         username = data.get("username")
+#         password = data.get("password")
+#         email = data.get("email")
+#         gender = data.get("gender")
+
+#         if len(password) <8:
+#             return JSONResponse(
+#                 {"message": "Password must be at least 8 characters long", "data": None},
+#                         status_code=400
+#             )
+
+#         existing_user = await find_user_by_username(username)
+#         if existing_user:
+#             return JSONResponse(
+#                 {"message": "User already exists", "data": None},
+#                 status_code=400
+#             )
+
+#         hashed_password = hash_password(password)
+#         await create_user(username, hashed_password, email, gender)
+#         return JSONResponse(
+#             {"message": "User created successfully", "data": {"username": username}},
+#             status_code=201
+#     )
 
     async def login(request: Request):
         data = await request.json()
@@ -91,7 +168,38 @@ class UserEndpoint (HTTPEndpoint, AbstractRepositoryforUser):
                 status_code=404
             )
 
+        # if new_password:
+        #     if len(new_password)<8:
+        #         return JSONResponse(
+        #             {"message": "Password must be at least 8 characters long", "data":None},
+        #             status_code=400
+        #         )
+        
         if new_password:
+            if len(new_password)< 8:
+                return JSONResponse(
+                    {"message": "Password must be at least 8 characters long", "data": None},
+                    status_code=400
+                )
+            
+            # if not re.search(r"[A-Z]", new_password):
+            #     return JSONResponse(
+            #         {"message": "Password must contain at least one uppercase letter", "data": None},
+            #         status_code=400
+            #     )
+            
+            # if not re.search(r"\d", new_password):
+            #     return JSONResponse(
+            #         {"message": "Password must contain at least one number", "data":None},
+            #         status_code=400
+            #     )
+            
+            # if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", new_password):
+            #     return JSONResponse(
+            #         {"message": "Password must contain at least one special character", "data": None},
+            #         status_code=400
+            #     )
+            
             hashed_password = hash_password(new_password)
             await update_user_password(username, hashed_password)
 
