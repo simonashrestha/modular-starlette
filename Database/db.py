@@ -40,7 +40,8 @@ blog = Table(
     Column("self_description", String(50)),
     Column("likes", Integer, default=0),
     Column("dislikes", Integer, default=0),
-    Column("reactions", JSON, default={})
+    Column("reactions", JSON, default={}),
+    Column("image", String(255))
 )
 
 comments = Table(
