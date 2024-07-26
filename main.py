@@ -1,7 +1,7 @@
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 from starlette.middleware import Middleware
-from Blogs.endpoint import BlogEndpoint, get_file
+from Blogs.endpoint import BlogEndpoint
 from Database.db import database
 from middleware import JWTAuthenticationMiddleware
 from Users.endpoint import UserEndpoint
@@ -25,7 +25,7 @@ protected_routes = [
     Route("/comments/{blog_id:int}", CommentEndpoint, methods=["POST"]),
     Route("/blogs/{blog_id:int}/comments", CommentEndpoint, methods=["GET"]),
     Route("/comments/{comment_id:int}", CommentEndpoint, methods=["PUT", "DELETE"]),
-    Route("/files/{filename}", get_file, methods=["GET"]),
+    # Route("/files/{filename}", get_file, methods=["GET"]),
 ]
 
 middleware = [
