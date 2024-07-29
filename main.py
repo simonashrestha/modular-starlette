@@ -25,7 +25,6 @@ protected_routes = [
     Route("/comments/{blog_id:int}", CommentEndpoint, methods=["POST"]),
     Route("/blogs/{blog_id:int}/comments", CommentEndpoint, methods=["GET"]),
     Route("/comments/{comment_id:int}", CommentEndpoint, methods=["PUT", "DELETE"]),
-    # Route("/files/{filename}", get_file, methods=["GET"]),
 ]
 
 middleware = [
