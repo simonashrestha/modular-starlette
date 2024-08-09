@@ -1,4 +1,7 @@
 {
-    "python.defaultInterpreterPath": "C:\\Users\\acer\\AppData\\Local\\pypoetry\\Cache\\virtualenvs\\my-project-y40y7AbA-py3.12"
+    "python.defaultInterpreterPath": "C:\\Users\\acer\\AppData\\Local\\pypoetry\\Cache\\virtualenvs\\my-project-y40y7AbA-py3.12",
+    "python.analysis.extraPaths": [
+        "./Email_Verification"
+    ]
 }
   
