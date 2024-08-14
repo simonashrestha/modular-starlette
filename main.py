@@ -10,9 +10,8 @@ from Comments.endpoint import CommentEndpoint
 from Blogs.Like.likeroutes import LikeEndpoint
 
 public_routes = [
-    Route("/register", UserEndpoint.register, methods=["POST"]),
+    Route("/register", UserEndpoint, methods=["POST"]),
     Route("/login", UserEndpoint.login, methods=["POST"]),
-    # Route("/verify-email", UserEndpoint.verify_email, methods=["GET"]),
 ]
 
 protected_routes = [

@@ -26,16 +26,6 @@ async def delete_user_by_username(username: str):
     query = users.delete().where(users.c.username == username)
     return await database.execute(query)
 
-# async def update_user_verification_status(username:str, verified: bool):
-#     query= users.update().where(users.c.username == username).values(need_verification= not verified)
-#     return await database.execute(query)
-
-# async def get_emails_for_verification():
-#     query= select([users.c.email]).where(users.c.need_verification==True)
-#     result= await database.fetch_all(query)
-#     return [row['email'] for row in result]
-
-
-# async def update_user_email_verified(username:str):
-#     query= users.update().where(users.c.username == username).values(email_verified= True)
-#     return await database.execute(query)
+async def update_user_verification_status(username: str, verified: bool):
+    query = users.update().where(users.c.username == username).values(verified=verified)
+    return await database.execute(query)

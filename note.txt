@@ -1,0 +1,19 @@
+1. To start the Redis server in cmd: redis-server --port 6379
+
+2. To connect the Redis server: redis-cli
+
+3. When you run "arq Email_Verification.email_worker.WorkerSettings":
+- ARQ uses the settings from WorkerSettings to connect to Redis.
+- The worker starts listening for jobs to process them asynchronously.
+
+4. To run the same port, first you need to stop the process: net stop redis
+
+5. To check the port is running or not: netstat -ano | findstr :6379
+
+6. To show the name of the process that is currently using port 6379: tasklist /FI "PID eq 5884"
+
+7. Terminate the Process: taskkill /PID 5884 /F
+
+
+
+

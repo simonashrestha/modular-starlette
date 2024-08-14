@@ -1,11 +1,14 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from Users.Auth.auth import hash_password, create_access_token, verify_password
-from Users.queries import find_user_by_username, create_user, update_user_password, update_user_email, update_user_gender, delete_user_by_username
+from Users.queries import find_user_by_username, create_user, update_user_password, update_user_email, update_user_gender, delete_user_by_username, update_user_verification_status
 from starlette.endpoints import HTTPEndpoint
 
 from pydantic import EmailStr, BaseModel, ValidationError # type: ignore
 import re
+
+
+from Email_Verification.email_tasks import enqueue_verification_email
 
 class UserRegistrationRequest(BaseModel):
     username:str
@@ -13,8 +16,13 @@ class UserRegistrationRequest(BaseModel):
     email: EmailStr
     gender: str
 
+
 class UserEndpoint (HTTPEndpoint):
-    async def register(request: Request):
+    async def post(self, request: Request):
+        return await self.register(request)
+    
+    async def register(self, request: Request):
+        print("Register method called")
         try:
             data = await request.json()
             user_data= UserRegistrationRequest(**data)
@@ -46,8 +54,11 @@ class UserEndpoint (HTTPEndpoint):
 
         hashed_password = hash_password(password)
         await create_user(username, hashed_password, email, gender)
+
+        await enqueue_verification_email(email, username)
+
         return JSONResponse(
-            {"message": "User created successfully", "data": {"username": username}},
+            {"message": "User created successfully. Please verify your email.", "data": {"username": username}},
             status_code=201
     )
 
@@ -160,30 +171,20 @@ class UserEndpoint (HTTPEndpoint):
             status_code=200
         )
 
-# from arq import ArqRedis
-# from arq.connections import RedisSettings
-# from Email_Verification.arq_config import Settings
-# from Email_Verification.tasks import send_verification_email
-# import smtplib
-
-
-
-# arq_redis= ArqRedis(Settings.redis_settings)
-
 # class UserRegistrationRequest(BaseModel):
-#     username: str
-#     password: str
+#     username:str
+#     password:str
 #     email: EmailStr
 #     gender: str
 
-# class UserEndpoint(HTTPEndpoint):
-#     async def register(self, request: Request):
+# class UserEndpoint (HTTPEndpoint):
+#     async def register(request: Request):
 #         try:
 #             data = await request.json()
-#             user_data = UserRegistrationRequest(**data)
+#             user_data= UserRegistrationRequest(**data)
 #         except ValidationError as e:
 #             return JSONResponse(
-#                 {"message": f"Validation error: {e.errors()}", "data": None},
+#                 {"message": f"validation error: {e.errors()}", "data": None},
 #                 status_code=400
 #             )
 
@@ -209,39 +210,12 @@ class UserEndpoint (HTTPEndpoint):
 
 #         hashed_password = hash_password(password)
 #         await create_user(username, hashed_password, email, gender)
-        
-#         # Generate a verification link
-#         verification_link = f"http://yourdomain.com/verify-email/{username}"  # Adjust according to your verification link structure
-        
-#         # Enqueue the email verification task
-#         await arq_redis.enqueue_job('send_verification_email', email, verification_link)
-
 #         return JSONResponse(
-#             {"message": "User created successfully, verification email sent", "data": {"username": username}},
+#             {"message": "User created successfully", "data": {"username": username}},
 #             status_code=201
-#         )
-    
-#     async def verify_email(self, request:Request):
-#         username= request.path_params['username']
-#         user= await find_user_by_username(username)
-#         if user is None:
-#             return JSONResponse(
-#                 {"message": "User not found", "data": None},
-#                 status_code=404
-#             )
-        
-#         if not user['need_verification']:
-#             return JSONResponse(
-#                 {"message": "Email already verified", "data": None},
-#                 status_code=400
-#             )
-        
-#         await update_user_verification_status(username, True)
-#         return JSONResponse(
-#             {"message": "Email successfully verified", "data": {"username": username}},
-#             status_code=200
-#         )
-    
+#     )
+
+
 #     async def login(request: Request):
 #         data = await request.json()
 #         username = data.get("username")
@@ -349,6 +323,8 @@ class UserEndpoint (HTTPEndpoint):
 #             {"message": f"Hello {user['sub']}", "data": {"username": user["sub"]}},
 #             status_code=200
 #         )
+
+
 
 
 
