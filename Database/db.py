@@ -8,6 +8,7 @@ from sqlalchemy import (
     String,
     Text,
     ForeignKey,
+    Boolean
 )
 from databases import Database
 from datetime import datetime
@@ -30,6 +31,7 @@ users = Table(
     Column("hashed_password", String(255)),
     Column("email", String(50)),
     Column("gender", String(50)),
+    Column("is_verified", Boolean, default=False),
 )
 
 blog = Table(

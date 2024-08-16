@@ -27,5 +27,5 @@ async def delete_user_by_username(username: str):
     return await database.execute(query)
 
 async def update_user_verification_status(username: str, verified: bool):
-    query = users.update().where(users.c.username == username).values(verified=verified)
+    query = users.update().where(users.c.username == username).values(is_verified=verified)
     return await database.execute(query)

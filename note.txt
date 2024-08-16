@@ -6,7 +6,9 @@
 - ARQ uses the settings from WorkerSettings to connect to Redis.
 - The worker starts listening for jobs to process them asynchronously.
 
-4. To run the same port, first you need to stop the process: net stop redis
+4. To run the same port, first you need to stop the process: 
+-redis-cli -p 6379 shutdown
+-net stop redis
 
 5. To check the port is running or not: netstat -ano | findstr :6379
 
@@ -15,5 +17,9 @@
 7. Terminate the Process: taskkill /PID 5884 /F
 
 
+simonaashrestha@gmail.com
+- App password: kbygwsoiphtkqnle
 
+My localhost website: "http://localhost:8000/verify-email/{username}"
 
+Windows powershell- ngrok http --domain=good-externally-bat.ngrok-free.app 8000

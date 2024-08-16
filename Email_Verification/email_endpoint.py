@@ -20,7 +20,6 @@ class EmailVerificationEndpoint(HTTPEndpoint):
                 status_code=404
             )
 
-        # Update the user's verification status
         await update_user_verification_status(username, verified=True)
 
         return JSONResponse(

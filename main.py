@@ -4,14 +4,25 @@ from starlette.routing import Route, Mount
 from starlette.middleware import Middleware
 from Blogs.endpoint import BlogEndpoint
 from Database.db import database
+from Email_Verification.email_endpoint import EmailVerificationEndpoint
 from middleware import JWTAuthenticationMiddleware
 from Users.endpoint import UserEndpoint
 from Comments.endpoint import CommentEndpoint
 from Blogs.Like.likeroutes import LikeEndpoint
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+from starlette.endpoints import HTTPEndpoint
+
+class HomeScreen(HTTPEndpoint):
+    async def get(self, request: Request):
+        return JSONResponse({"Welcome": "To My Project"})
+
 
 public_routes = [
+    Route("/", HomeScreen, methods=["GET"]),
     Route("/register", UserEndpoint, methods=["POST"]),
     Route("/login", UserEndpoint.login, methods=["POST"]),
+    Route("/verify-email/{username}", EmailVerificationEndpoint, methods=["GET"]),
 ]
 
 protected_routes = [
@@ -40,6 +51,7 @@ app = Starlette(
         Mount("/", app=protected_app),
     ]
 )
+
 
 @app.on_event("startup")
 async def startup():
