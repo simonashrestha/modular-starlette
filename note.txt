@@ -20,6 +20,6 @@
 simonaashrestha@gmail.com
 - App password: kbygwsoiphtkqnle
 
-My localhost website: "http://localhost:8000/verify-email/{username}"
+8. My localhost website: "http://localhost:8000/verify-email/{username}"
 
-Windows powershell- ngrok http --domain=good-externally-bat.ngrok-free.app 8000
+9. Windows powershell- ngrok http --domain=good-externally-bat.ngrok-free.app 8000

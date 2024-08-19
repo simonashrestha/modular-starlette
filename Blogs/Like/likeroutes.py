@@ -1,12 +1,11 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from Blogs.Like.likequeries import increment_likes, increment_dislikes
+from Blogs.Like.likequeries import update_reactions
 from starlette.endpoints import HTTPEndpoint
 from repo import AbstractRepository
 
 class LikeEndpoint(HTTPEndpoint, AbstractRepository):
     async def post_like(request: Request):
-    
         user_id = request.state.user.get("sub")
         blog_id = request.path_params.get("blog_id")
 
@@ -24,8 +23,13 @@ class LikeEndpoint(HTTPEndpoint, AbstractRepository):
             )
 
         # Update reactions in the database
-        response = await increment_likes(user_id, blog_id, reaction="like")
-        if response == "Already liked":
+        response = await update_reactions(user_id, blog_id, new_reaction="like")
+        if response == "Blog not found":
+            return JSONResponse(
+                {"message": "Blog not found", "data": {"blog_id": blog_id}},
+                status_code=404,
+            )
+        elif response == "No change in reaction":
             return JSONResponse(
                 {"message": "Blog already liked by user", "data": {"blog_id": blog_id}},
                 status_code=200,
@@ -57,8 +61,13 @@ class LikeEndpoint(HTTPEndpoint, AbstractRepository):
             )
 
         # Update reactions in the database
-        response = await increment_dislikes(user_id, blog_id, reaction="dislike")
-        if response == "Already disliked":
+        response = await update_reactions(user_id, blog_id, new_reaction="dislike")
+        if response == "Blog not found":
+            return JSONResponse(
+                {"message": "Blog not found", "data": {"blog_id": blog_id}},
+                status_code=404,
+            )
+        elif response == "No change in reaction":
             return JSONResponse(
                 {"message": "Blog already disliked by user", "data": {"blog_id": blog_id}},
                 status_code=200,
@@ -71,6 +80,73 @@ class LikeEndpoint(HTTPEndpoint, AbstractRepository):
             },
             status_code=200,
         )
+# class LikeEndpoint(HTTPEndpoint, AbstractRepository):
+#     async def post_like(request: Request):
+    
+#         user_id = request.state.user.get("sub")
+#         blog_id = request.path_params.get("blog_id")
+
+#         if not blog_id:
+#             return JSONResponse(
+#                 {"message": "Blog ID path parameter is required", "data": None},
+#                 status_code=400,
+#             )
+
+#         try:
+#             blog_id = int(blog_id)
+#         except ValueError:
+#             return JSONResponse(
+#                 {"message": "Blog ID must be an integer", "data": None}, status_code=400,
+#             )
+
+#         # Update reactions in the database
+#         response = await increment_likes(user_id, blog_id, reaction="like")
+#         if response == "Already liked":
+#             return JSONResponse(
+#                 {"message": "Blog already liked by user", "data": {"blog_id": blog_id}},
+#                 status_code=200,
+#             )
+
+#         return JSONResponse(
+#             {
+#                 "message": f"Blog with ID {blog_id} liked successfully by user {user_id}",
+#                 "data": {"blog_id": blog_id, "user_id": user_id},
+#             },
+#             status_code=200,
+#         )
+
+#     async def post_dislike(request: Request):
+#         user_id = request.state.user.get("sub")
+#         blog_id = request.path_params.get("blog_id")
+
+#         if not blog_id:
+#             return JSONResponse(
+#                 {"message": "Blog ID path parameter is required", "data": None},
+#                 status_code=400,
+#             )
+
+#         try:
+#             blog_id = int(blog_id)
+#         except ValueError:
+#             return JSONResponse(
+#                 {"message": "Blog ID must be an integer", "data": None}, status_code=400,
+#             )
+
+#         # Update reactions in the database
+#         response = await increment_dislikes(user_id, blog_id, reaction="dislike")
+#         if response == "Already disliked":
+#             return JSONResponse(
+#                 {"message": "Blog already disliked by user", "data": {"blog_id": blog_id}},
+#                 status_code=200,
+#             )
+
+#         return JSONResponse(
+#             {
+#                 "message": f"Blog with ID {blog_id} disliked successfully by user {user_id}",
+#                 "data": {"blog_id": blog_id, "user_id": user_id},
+#             },
+#             status_code=200,
+#         )
 
 
 

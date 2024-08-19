@@ -4,7 +4,6 @@ import smtplib
 from email.mime.text import MIMEText
 
 async def send_verification_email(ctx, email: str, username: str):
-    # verification_link = f" https://good-externally-bat.ngrok-free.app/verify-email/{username}"
     ngrok_url = "https://good-externally-bat.ngrok-free.app"
     verification_link = f"{ngrok_url}/verify-email/{username}"
     msg = MIMEText(f"Please verify your email by clicking this link: {verification_link}")
