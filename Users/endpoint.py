@@ -171,74 +171,7 @@ class UserEndpoint(HTTPEndpoint):
         )
 
 
-    # async def reset_password(request: Request):
-    #     try:
-    #         data = await request.json()
-    #         reset_data = PasswordResetRequest(**data)
-    #     except ValidationError as e:
-    #         return JSONResponse(
-    #             {"message": f"validation error: {e.errors()}", "data": None},
-    #             status_code=400
-    #         )
-
-    #     username = reset_data.username
-    #     new_password = reset_data.new_password
-
-    #     user = await find_user_by_username(username)
-    #     if not user:
-    #         return JSONResponse(
-    #             {"message": "User not found", "data": None},
-    #             status_code=404
-    #         )
-
-    #     password_regex = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"
-
-    #     if not re.match(password_regex, new_password):
-    #         return JSONResponse(
-    #             {"message": "Password must be at least 8 characters long, and include uppercase letters, lowercase letters, digits, and special characters.", "data": None},
-    #             status_code=400
-    #         )
-
-    #     hashed_password = hash_password(new_password)
-    #     await update_user_password(username, hashed_password)
-
-    #     return JSONResponse(
-    #         {"message": "Password reset successfully", "data": {"username": username}},
-    #         status_code=200
-    #     )
-
-    # async def request_password_reset(request: Request):
-    #     try:
-    #         data= await request.json()
-    #         email= data.get("email")
-    #     except ValidationError as e:
-    #         return JSONResponse(
-    #             {"message": f"validation error: {e.errors()}", "data": None},
-    #             status_code= 400
-    #         )
-    #     if not email:
-    #         return JSONResponse(
-    #             {"message": "Email is required", "data": None},
-    #             status_code=400
-    #         )
-
-    #     user = await find_user_by_email(email)
-    #     if not user:
-    #         return JSONResponse(
-    #             {"message": "User not found", "data": None},
-    #             status_code=404
-    #         )
-
-    #     reset_token = create_password_reset_token(email)
-    #     await send_password_reset_email(email, reset_token)
-
-    #     return JSONResponse(
-    #         {"message": "Password reset email sent successfully", "data": None},
-    #         status_code=200
-    #     )
-
-        
-
+    
 
 # from starlette.requests import Request
 # from starlette.responses import JSONResponse

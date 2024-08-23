@@ -5,7 +5,7 @@ from starlette.middleware import Middleware
 from Blogs.endpoint import BlogEndpoint
 from Database.db import database
 from Email_Verification.email_endpoint import EmailVerificationEndpoint
-from Password_Reset.reset_endpoint import PasswordResetData, request_password_reset, reset_password
+from Password_Reset.reset_endpoint import request_password_reset, reset_password
 from middleware import JWTAuthenticationMiddleware
 from Users.endpoint import UserEndpoint
 from Comments.endpoint import CommentEndpoint
