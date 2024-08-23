@@ -10,8 +10,8 @@ async def create_user(username: str, hashed_password: str, email: str, gender: s
     query = users.insert().values(username=username, hashed_password=hashed_password, email=email, gender=gender)
     return await database.execute(query)
 
-async def update_user_password(username: str, hashed_password: str):
-    query = users.update().where(users.c.username == username).values(hashed_password=hashed_password)
+async def update_user_password(email: str, hashed_password: str):
+    query = users.update().where(users.c.email == email).values(hashed_password=hashed_password)
     return await database.execute(query)
 
 async def update_user_email(username: str, email: str):
@@ -29,3 +29,7 @@ async def delete_user_by_username(username: str):
 async def update_user_verification_status(username: str, verified: bool):
     query = users.update().where(users.c.username == username).values(is_verified=verified)
     return await database.execute(query)
+
+async def find_user_by_email(email: str):
+    query = users.select().where(users.c.email == email)
+    return await database.fetch_one(query)

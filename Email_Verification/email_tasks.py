@@ -21,9 +21,36 @@ async def send_verification_email(ctx, email: str, username: str):
     except Exception as e:
         print(f"Failed to send email: {e}")
 
+async def send_password_reset_email(email: str, reset_token: str):
+    ngrok_url = "https://good-externally-bat.ngrok-free.app"
+    reset_link = f"{ngrok_url}/reset-password?token={reset_token}"
+    msg = MIMEText(f"Click the following link to reset your password: {reset_link}")
+    msg['Subject'] = 'Password Reset Request'
+    msg['From'] = 'simonaashrestha@gmail.com' 
+    msg['To'] = email
+
+    try:
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login('simonaashrestha@gmail.com', 'kbygwsoiphtkqnle')
+            server.send_message(msg)
+        print(f"Password reset email sent to {email}")
+
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
 async def enqueue_verification_email(email: str, username: str):
     redis = await create_pool(RedisSettings())
     job = await redis.enqueue_job("send_verification_email", email, username)
     print(f"Job enqueued with ID: {job}")
-        
+
+async def enqueue_password_reset_email(email: str, reset_token: str):
+    redis = await create_pool(RedisSettings())
+    job = await redis.enqueue_job("send_password_reset_email", email, reset_token)
+    print(f"Job enqueued with ID: {job}")
+
+
+
+
+
 
