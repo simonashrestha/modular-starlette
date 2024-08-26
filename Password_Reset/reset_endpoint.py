@@ -96,7 +96,7 @@ async def reset_password(request: Request):
         )
 
     hashed_password = hash_password(new_password)
-    await update_user_password(email, hashed_password)  # Assuming `update_user_password` uses email as identifier
+    await update_user_password(email, hashed_password) 
 
     return JSONResponse(
         {"message": "Password reset successfully", "data": {"email": email}},
