@@ -23,3 +23,7 @@ simonaashrestha@gmail.com
 8. My localhost website: "http://localhost:8000/verify-email/{username}"
 
 9. Windows powershell- ngrok http --domain=good-externally-bat.ngrok-free.app 8000
+
+10. Run Your Docker Containers:docker-compose up
+
+
